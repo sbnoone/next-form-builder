@@ -14,6 +14,8 @@ import {
 export default function Auth() {
 	const { data } = useSession()
 
+	console.log(data?.user)
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
