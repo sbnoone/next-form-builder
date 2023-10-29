@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth'
 
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { FormSchema, TFormSchema } from '@/schemas/form'
 
 class UserNotFoundError extends Error {
 	constructor() {
@@ -15,8 +16,6 @@ class UserNotFoundError extends Error {
 
 export async function GetFormStats() {
 	const session = await getServerSession(authOptions)
-	// console.log('GET FORM STATS', session)
-	// return {}
 	if (!session?.user) {
 		throw new UserNotFoundError()
 	}
@@ -48,4 +47,62 @@ export async function GetFormStats() {
 		submissionRate,
 		bounceRate,
 	}
+}
+
+export async function CreateForm(values: TFormSchema) {
+	const valid = FormSchema.safeParse(values)
+	if (!valid.success) {
+		throw new Error('form not valid')
+	}
+
+	const session = await getServerSession(authOptions)
+	if (!session?.user.id) {
+		throw new UserNotFoundError()
+	}
+
+	const { name, description } = values
+
+	const form = await prisma.form.create({
+		data: {
+			name,
+			description,
+			user_id: session.user.id,
+		},
+	})
+
+	return form.id
+}
+
+export async function GetForms() {
+	const session = await getServerSession(authOptions)
+	if (!session?.user.id) {
+		throw new UserNotFoundError()
+	}
+
+	const forms = await prisma.form.findMany({
+		where: {
+			user_id: session.user.id,
+		},
+		orderBy: {
+			created_at: 'desc',
+		},
+	})
+
+	return forms
+}
+
+export async function GetFormById(id: number) {
+	const session = await getServerSession(authOptions)
+	if (!session?.user.id) {
+		throw new UserNotFoundError()
+	}
+
+	const form = await prisma.form.findUnique({
+		where: {
+			id,
+			user_id: session.user.id,
+		},
+	})
+
+	return form
 }
