@@ -9,7 +9,7 @@ import { MdTextFields } from 'react-icons/md'
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from '../form-elements'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
-import { useDesigner } from '../hooks/use-designer'
+import { useDesigner } from '../../hooks/use-designer'
 import {
 	Form,
 	FormControl,

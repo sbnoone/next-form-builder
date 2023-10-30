@@ -1,6 +1,6 @@
 import { AiOutlineClose } from 'react-icons/ai'
 
-import { useDesigner } from './hooks/use-designer'
+import { useDesigner } from '../hooks/use-designer'
 import { FormElements } from './form-elements'
 import { Button } from './ui/button'
 import { Separator } from './ui/separator'

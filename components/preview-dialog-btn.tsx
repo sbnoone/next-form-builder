@@ -1,7 +1,7 @@
 import { MdPreview } from 'react-icons/md'
 
 import { Button } from './ui/button'
-import { useDesigner } from './hooks/use-designer'
+import { useDesigner } from '@/hooks/use-designer'
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 import { FormElements } from './form-elements'
 
@@ -12,7 +12,7 @@ export default function PreviewDialogBtn() {
 		<Dialog>
 			<DialogTrigger asChild>
 				<Button
-					variant={'outline'}
+					variant='outline'
 					className='gap-2'
 				>
 					<MdPreview className='h-6 w-6' />

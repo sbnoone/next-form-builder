@@ -9,7 +9,7 @@ import { BsArrowLeft, BsArrowRight } from 'react-icons/bs'
 
 import { Form } from '@prisma/client'
 import Designer from './designer'
-import { useDesigner } from './hooks/use-designer'
+import { useDesigner } from '../hooks/use-designer'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { toast } from './ui/use-toast'

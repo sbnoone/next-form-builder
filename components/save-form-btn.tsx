@@ -4,7 +4,7 @@ import { FaSpinner } from 'react-icons/fa'
 
 import { UpdateFormContent } from '@/actions/form'
 import { Button } from './ui/button'
-import { useDesigner } from './hooks/use-designer'
+import { useDesigner } from '../hooks/use-designer'
 import { toast } from './ui/use-toast'
 
 export default function SaveFormBtn({ id }: { id: number }) {
