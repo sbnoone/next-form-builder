@@ -11,7 +11,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-export default function Auth() {
+export default function User() {
 	const { data } = useSession()
 
 	console.log(data?.user)

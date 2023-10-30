@@ -1,6 +1,7 @@
-import useDesigner from './hooks/use-designer'
-import { FormElements } from './form-elements'
 import { AiOutlineClose } from 'react-icons/ai'
+
+import { useDesigner } from './hooks/use-designer'
+import { FormElements } from './form-elements'
 import { Button } from './ui/button'
 import { Separator } from './ui/separator'
 
@@ -8,7 +9,7 @@ export default function PropertiesFormSidebar() {
 	const { selectedElement, setSelectedElement } = useDesigner()
 	if (!selectedElement) return null
 
-	const PropertiesForm = FormElements[selectedElement?.type].propertiesComponent
+	const FieldOptionsForm = FormElements[selectedElement?.type].fieldOptionsForm
 
 	return (
 		<div className='flex flex-col p-2'>
@@ -17,15 +18,13 @@ export default function PropertiesFormSidebar() {
 				<Button
 					size={'icon'}
 					variant={'ghost'}
-					onClick={() => {
-						setSelectedElement(null)
-					}}
+					onClick={() => setSelectedElement(null)}
 				>
 					<AiOutlineClose />
 				</Button>
 			</div>
 			<Separator className='mb-4' />
-			<PropertiesForm elementInstance={selectedElement} />
+			<FieldOptionsForm elementInstance={selectedElement} />
 		</div>
 	)
 }

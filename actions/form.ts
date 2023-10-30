@@ -106,3 +106,39 @@ export async function GetFormById(id: number) {
 
 	return form
 }
+
+export async function UpdateFormContent(id: number, jsonContent: string) {
+	const session = await getServerSession(authOptions)
+	if (!session?.user.id) {
+		throw new UserNotFoundError()
+	}
+
+	const form = await prisma.form.update({
+		where: {
+			user_id: session.user.id,
+			id,
+		},
+		data: {
+			content: jsonContent,
+		},
+	})
+
+	return form
+}
+
+export async function PublishForm(id: number) {
+	const session = await getServerSession(authOptions)
+	if (!session?.user.id) {
+		throw new UserNotFoundError()
+	}
+
+	return await prisma.form.update({
+		data: {
+			published: true,
+		},
+		where: {
+			user_id: session.user.id,
+			id,
+		},
+	})
+}

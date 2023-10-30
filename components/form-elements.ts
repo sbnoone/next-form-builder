@@ -43,7 +43,7 @@ export type FormElement = {
 		isInvalid?: boolean
 		defaultValue?: string
 	}>
-	propertiesComponent: React.FC<{
+	fieldOptionsForm: React.FC<{
 		elementInstance: FormElementInstance
 	}>
 

@@ -1,4 +1,4 @@
-import Auth from '@/components/auth'
+import User from '@/components/user'
 import { ThemeModeToggle } from '@/components/theme-mode-toggle'
 import { Logo } from '@/components/logo'
 import {

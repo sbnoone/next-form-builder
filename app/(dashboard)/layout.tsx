@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 import { Logo } from '@/components/logo'
 import { ThemeModeToggle } from '@/components/theme-mode-toggle'
-import Auth from '@/components/auth'
+import User from '@/components/user'
 
 export default function Layout({ children }: { children: ReactNode }) {
 	return (
@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 				<Logo />
 				<div className='flex gap-4 items-center'>
 					<ThemeModeToggle />
-					<Auth />
+					<User />
 				</div>
 			</nav>
 			<main className='flex w-full flex-grow'>{children}</main>

@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useState } from 'react'
-import DesignerSidebar from './designer-sidebar'
+import { useState } from 'react'
 import { DragEndEvent, useDndMonitor, useDraggable, useDroppable } from '@dnd-kit/core'
+import { BiSolidTrash } from 'react-icons/bi'
+
+import DesignerSidebar from './designer-sidebar'
 import { cn } from '@/lib/utils'
-import useDesigner from './hooks/use-designer'
+import { useDesigner } from './hooks/use-designer'
 import { ElementsType, FormElementInstance, FormElements } from './form-elements'
 import { idGenerator } from '@/lib/id-generator'
 import { Button } from './ui/button'
-import { BiSolidTrash } from 'react-icons/bi'
 
 export default function Designer() {
 	const { elements, addElement, selectedElement, setSelectedElement, removeElement } = useDesigner()
@@ -147,7 +148,7 @@ export default function Designer() {
 }
 
 function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
-	const { removeElement, selectedElement, setSelectedElement } = useDesigner()
+	const { removeElement, setSelectedElement } = useDesigner()
 
 	const [mouseIsOver, setMouseIsOver] = useState<boolean>(false)
 	const topHalf = useDroppable({

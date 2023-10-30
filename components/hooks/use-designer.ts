@@ -3,7 +3,7 @@
 import { useContext } from 'react'
 import { DesignerContext } from '../context/designer'
 
-export default function useDesigner() {
+export function useDesigner() {
 	const context = useContext(DesignerContext)
 
 	if (!context) {

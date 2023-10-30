@@ -1,21 +1,22 @@
 'use client'
 
-import { Form } from '@prisma/client'
 import { useEffect, useState } from 'react'
-// import PreviewDialogBtn from "./PreviewDialogBtn";
-// import PublishFormBtn from "./PublishFormBtn";
-// import SaveFormBtn from "./SaveFormBtn";
-import Designer from './designer'
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
-// import DragOverlayWrapper from "./DragOverlayWrapper";
-import useDesigner from './hooks/use-designer'
+import Link from 'next/link'
 import { ImSpinner2 } from 'react-icons/im'
+import { BsArrowLeft, BsArrowRight } from 'react-icons/bs'
+// import Confetti from "react-confetti";
+
+import { Form } from '@prisma/client'
+import Designer from './designer'
+import { useDesigner } from './hooks/use-designer'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { toast } from './ui/use-toast'
-import Link from 'next/link'
-import { BsArrowLeft, BsArrowRight } from 'react-icons/bs'
-// import Confetti from "react-confetti";
+import DragOverlayWrapper from './drag-overlay-wrapper'
+import SaveFormBtn from './save-form-btn'
+import PreviewDialogBtn from './preview-dialog-btn'
+import PublishFormBtn from './publish-form-btn'
 
 export default function FormBuilder({ form }: { form: Form }) {
 	const { setElements, setSelectedElement } = useDesigner()
@@ -89,11 +90,11 @@ export default function FormBuilder({ form }: { form: Form }) {
 						</div>
 						<div className='flex justify-between'>
 							<Button
-								variant={'link'}
+								variant='link'
 								asChild
 							>
 								<Link
-									href={'/'}
+									href='/'
 									className='gap-2'
 								>
 									<BsArrowLeft />
@@ -101,7 +102,7 @@ export default function FormBuilder({ form }: { form: Form }) {
 								</Link>
 							</Button>
 							<Button
-								variant={'link'}
+								variant='link'
 								asChild
 							>
 								<Link
@@ -127,21 +128,17 @@ export default function FormBuilder({ form }: { form: Form }) {
 						<span className='text-muted-foreground mr-2'>Form:</span>
 						{form.name}
 					</h2>
-					{/* <div className="flex items-center gap-2">
-            <PreviewDialogBtn />
-            {!form.published && (
-              <>
-                <SaveFormBtn id={form.id} />
-                <PublishFormBtn id={form.id} />
-              </>
-            )}
-          </div> */}
+					<div className='flex items-center gap-2'>
+						<PreviewDialogBtn />
+						<SaveFormBtn id={form.id} />
+						<PublishFormBtn id={form.id} />
+					</div>
 				</nav>
 				<div className='flex w-full flex-grow items-center justify-center relative overflow-y-auto h-[200px] bg-accent bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]'>
 					<Designer />
 				</div>
 			</main>
-			{/* <DragOverlayWrapper /> */}
+			<DragOverlayWrapper />
 		</DndContext>
 	)
 }

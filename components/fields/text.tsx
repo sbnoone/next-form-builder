@@ -1,15 +1,15 @@
 'use client'
 
+import { z } from 'zod'
+import { useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { MdTextFields } from 'react-icons/md'
+
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from '../form-elements'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
-import useDesigner from '../hooks/use-designer'
-
+import { useDesigner } from '../hooks/use-designer'
 import {
 	Form,
 	FormControl,
@@ -28,15 +28,8 @@ const extraAttributes = {
 	label: 'Text field',
 	helperText: 'Helper text',
 	required: false,
-	placeHolder: 'Value here...',
+	placeholder: 'Value here...',
 }
-
-const propertiesSchema = z.object({
-	label: z.string().min(2).max(50),
-	helperText: z.string().max(200),
-	required: z.boolean().default(false),
-	placeHolder: z.string().max(50),
-})
 
 export const TextFieldFormElement: FormElement = {
 	type,
@@ -51,7 +44,7 @@ export const TextFieldFormElement: FormElement = {
 	},
 	designerComponent: DesignerComponent,
 	formComponent: FormComponent,
-	propertiesComponent: PropertiesComponent,
+	fieldOptionsForm: FieldOptionsForm,
 
 	validate: (formElement: FormElementInstance, currentValue: string): boolean => {
 		const element = formElement as CustomInstance
@@ -135,18 +128,26 @@ function FormComponent({
 	)
 }
 
-type propertiesFormSchemaType = z.infer<typeof propertiesSchema>
-function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
+const FieldOptionsSchema = z.object({
+	label: z.string().min(2).max(50),
+	helperText: z.string().max(200),
+	required: z.boolean().default(false),
+	placeholder: z.string().max(50),
+})
+
+type TFieldOptions = z.infer<typeof FieldOptionsSchema>
+
+function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementInstance }) {
 	const element = elementInstance as CustomInstance
 	const { updateElement } = useDesigner()
-	const form = useForm<propertiesFormSchemaType>({
-		resolver: zodResolver(propertiesSchema),
+	const form = useForm<TFieldOptions>({
+		resolver: zodResolver(FieldOptionsSchema),
 		mode: 'onBlur',
 		defaultValues: {
 			label: element.extraAttributes.label,
 			helperText: element.extraAttributes.helperText,
 			required: element.extraAttributes.required,
-			placeHolder: element.extraAttributes.placeHolder,
+			placeholder: element.extraAttributes.placeHolder,
 		},
 	})
 
@@ -154,14 +155,14 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 		form.reset(element.extraAttributes)
 	}, [element, form])
 
-	function applyChanges(values: propertiesFormSchemaType) {
-		const { label, helperText, placeHolder, required } = values
+	const onSubmit: SubmitHandler<TFieldOptions> = (values) => {
+		const { label, helperText, placeholder, required } = values
 		updateElement(element.id, {
 			...element,
 			extraAttributes: {
 				label,
 				helperText,
-				placeHolder,
+				placeholder,
 				required,
 			},
 		})
@@ -170,10 +171,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 	return (
 		<Form {...form}>
 			<form
-				onBlur={form.handleSubmit(applyChanges)}
-				onSubmit={(e) => {
-					e.preventDefault()
-				}}
+				onBlur={form.handleSubmit(onSubmit)}
+				onSubmit={(e) => e.preventDefault()}
 				className='space-y-3'
 			>
 				<FormField
@@ -199,7 +198,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 				/>
 				<FormField
 					control={form.control}
-					name='placeHolder'
+					name='placeholder'
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>PlaceHolder</FormLabel>
