@@ -1,4 +1,4 @@
-// import { CheckboxFieldFormElement } from "./fields/CheckboxField";
+import { CheckboxFieldFormElement } from './fields/checkbox-field'
 // import { DateFieldFormElement } from "./fields/DateField";
 // import { ParagprahFieldFormElement } from "./fields/ParagraphField";
 // import { SelectFieldFormElement } from "./fields/SelectField";
@@ -6,20 +6,25 @@
 // import { SpacerFieldFormElement } from "./fields/SpacerField";
 // import { SubTitleFieldFormElement } from "./fields/SubTitleField";
 // import { TextAreaFormElement } from "./fields/TextAreaField";
+import { DateFieldFormElement } from './fields/date-field'
 import { NumberFieldFormElement } from './fields/number-field'
+import { SelectFieldFormElement } from './fields/select-field'
 import { TextFieldFormElement } from './fields/text-field'
 import { TextareaFieldFormElement } from './fields/textarea-field'
 // import { TitleFieldFormElement } from "./fields/TitleField";
 
-export type ElementsType = 'TextField' | 'NumberField' | 'TextAreaField'
-// | 'TitleField'
-// | 'SubTitleField'
-// | 'ParagraphField'
-// | 'SeparatorField'
-// | 'SpacerField'
-// | 'DateField'
-// | 'SelectField'
-// | 'CheckboxField'
+export type ElementsType =
+	| 'TextField'
+	| 'NumberField'
+	| 'TextAreaField'
+	| 'DateField'
+	// | 'TitleField'
+	// | 'SubTitleField'
+	// | 'ParagraphField'
+	// | 'SeparatorField'
+	// | 'SpacerField'
+	| 'SelectField'
+	| 'CheckboxField'
 
 export type SubmitFunction = (key: string, value: string) => void
 
@@ -62,12 +67,12 @@ export const FormElements: FormElementsType = {
 	TextField: TextFieldFormElement,
 	NumberField: NumberFieldFormElement,
 	TextAreaField: TextareaFieldFormElement,
+	DateField: DateFieldFormElement,
 	// TitleField: TitleFieldFormElement,
 	// SubTitleField: SubTitleFieldFormElement,
 	// ParagraphField: ParagprahFieldFormElement,
 	// SeparatorField: SeparatorFieldFormElement,
 	// SpacerField: SpacerFieldFormElement,
-	// DateField: DateFieldFormElement,
-	// SelectField: SelectFieldFormElement,
-	// CheckboxField: CheckboxFieldFormElement,
+	SelectField: SelectFieldFormElement,
+	CheckboxField: CheckboxFieldFormElement,
 }

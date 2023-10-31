@@ -22,9 +22,9 @@ export default function FormElementsSidebar() {
 				<SidebarBtnElement formElement={FormElements.TextField} />
 				<SidebarBtnElement formElement={FormElements.NumberField} />
 				<SidebarBtnElement formElement={FormElements.TextAreaField} />
-				{/*<SidebarBtnElement formElement={FormElements.DateField} />
-        <SidebarBtnElement formElement={FormElements.SelectField} />
-        <SidebarBtnElement formElement={FormElements.CheckboxField} />  */}
+				<SidebarBtnElement formElement={FormElements.DateField} />
+				<SidebarBtnElement formElement={FormElements.CheckboxField} />
+				<SidebarBtnElement formElement={FormElements.SelectField} />
 			</div>
 		</div>
 	)
