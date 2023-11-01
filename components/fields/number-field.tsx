@@ -99,7 +99,7 @@ function FormComponent({
 		setError(isInvalid === true)
 	}, [isInvalid])
 
-	const { label, required, placeHolder, helperText } = element.extraAttributes
+	const { label, required, placeholder, helperText } = element.extraAttributes
 	return (
 		<div className='flex flex-col gap-2 w-full'>
 			<Label className={cn(error && 'text-red-500')}>
@@ -109,7 +109,7 @@ function FormComponent({
 			<Input
 				type='number'
 				className={cn(error && 'border-red-500')}
-				placeholder={placeHolder}
+				placeholder={placeholder}
 				onChange={(e) => setValue(e.target.value)}
 				onBlur={(e) => {
 					if (!submitValue) return
@@ -148,7 +148,7 @@ function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementIns
 			label: element.extraAttributes.label,
 			helperText: element.extraAttributes.helperText,
 			required: element.extraAttributes.required,
-			placeholder: element.extraAttributes.placeHolder,
+			placeholder: element.extraAttributes.placeholder,
 		},
 	})
 

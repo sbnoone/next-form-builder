@@ -165,7 +165,7 @@ function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementIns
 			label: element.extraAttributes.label,
 			helperText: element.extraAttributes.helperText,
 			required: element.extraAttributes.required,
-			placeholder: element.extraAttributes.placeHolder,
+			placeholder: element.extraAttributes.placeholder,
 			options: element.extraAttributes.options,
 		},
 	})
