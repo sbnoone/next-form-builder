@@ -26,6 +26,8 @@ export default function Designer() {
 			const { active, over } = event
 			if (!active || !over) return
 
+			active.data?.current?.onDragEnd() // Clear hover effect
+
 			const isDesignerBtnElement = active.data?.current?.isDesignerBtnElement
 			const isDroppingOverDesignerDropArea = over.data?.current?.isDesignerDropArea
 
@@ -175,6 +177,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
 			type: element.type,
 			elementId: element.id,
 			isDesignerElement: true,
+			onDragEnd: () => setMouseIsOver(false),
 		},
 	})
 
@@ -204,14 +207,14 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
 			/>
 			<div
 				ref={bottomHalf.setNodeRef}
-				className='absolute  w-full bottom-0 h-1/2 rounded-b-md'
+				className='absolute w-full bottom-0 h-1/2 rounded-b-md'
 			/>
 			{mouseIsOver && (
 				<>
 					<div className='absolute right-0 h-full'>
 						<Button
 							className='flex justify-center h-full border rounded-md rounded-l-none bg-red-500'
-							variant={'outline'}
+							variant='outline'
 							onClick={(e) => {
 								e.stopPropagation() // avoid selection of element while deleting
 								removeElement(element.id)

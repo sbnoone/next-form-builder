@@ -1,28 +1,25 @@
 import { CheckboxFieldFormElement } from './fields/checkbox-field'
-// import { DateFieldFormElement } from "./fields/DateField";
-// import { ParagprahFieldFormElement } from "./fields/ParagraphField";
-// import { SelectFieldFormElement } from "./fields/SelectField";
-// import { SeparatorFieldFormElement } from "./fields/SeparatorField";
-// import { SpacerFieldFormElement } from "./fields/SpacerField";
-// import { SubTitleFieldFormElement } from "./fields/SubTitleField";
-// import { TextAreaFormElement } from "./fields/TextAreaField";
 import { DateFieldFormElement } from './fields/date-field'
 import { NumberFieldFormElement } from './fields/number-field'
+import { ParagraphFieldFormElement } from './fields/paragraph-field'
 import { SelectFieldFormElement } from './fields/select-field'
+import { SeparatorFieldFormElement } from './fields/separator-field'
+import { SpacerFieldFormElement } from './fields/spacer-field'
+import { SubtitleFieldFormElement } from './fields/subtitle-field'
 import { TextFieldFormElement } from './fields/text-field'
 import { TextareaFieldFormElement } from './fields/textarea-field'
-// import { TitleFieldFormElement } from "./fields/TitleField";
+import { TitleFieldFormElement } from './fields/title-field'
 
 export type ElementsType =
 	| 'TextField'
 	| 'NumberField'
 	| 'TextAreaField'
 	| 'DateField'
-	// | 'TitleField'
-	// | 'SubTitleField'
-	// | 'ParagraphField'
-	// | 'SeparatorField'
-	// | 'SpacerField'
+	| 'TitleField'
+	| 'SubTitleField'
+	| 'ParagraphField'
+	| 'SeparatorField'
+	| 'SpacerField'
 	| 'SelectField'
 	| 'CheckboxField'
 
@@ -68,11 +65,11 @@ export const FormElements: FormElementsType = {
 	NumberField: NumberFieldFormElement,
 	TextAreaField: TextareaFieldFormElement,
 	DateField: DateFieldFormElement,
-	// TitleField: TitleFieldFormElement,
-	// SubTitleField: SubTitleFieldFormElement,
-	// ParagraphField: ParagprahFieldFormElement,
-	// SeparatorField: SeparatorFieldFormElement,
-	// SpacerField: SpacerFieldFormElement,
+	TitleField: TitleFieldFormElement,
+	SubTitleField: SubtitleFieldFormElement,
+	ParagraphField: ParagraphFieldFormElement,
+	SeparatorField: SeparatorFieldFormElement,
+	SpacerField: SpacerFieldFormElement,
 	SelectField: SelectFieldFormElement,
 	CheckboxField: CheckboxFieldFormElement,
 }

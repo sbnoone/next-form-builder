@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MdTextFields } from 'react-icons/md'
+import { BsTextareaResize } from 'react-icons/bs'
 
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from '../form-elements'
 import { Label } from '../ui/label'
@@ -42,7 +42,7 @@ export const TextareaFieldFormElement: FormElement = {
 		extraAttributes,
 	}),
 	designerBtnElement: {
-		icon: MdTextFields,
+		icon: BsTextareaResize,
 		label: 'Textarea Field',
 	},
 	designerComponent: DesignerComponent,

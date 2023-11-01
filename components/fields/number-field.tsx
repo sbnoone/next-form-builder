@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MdTextFields } from 'react-icons/md'
+import { Bs123 } from 'react-icons/bs'
 
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from '../form-elements'
 import { Label } from '../ui/label'
@@ -39,7 +39,7 @@ export const NumberFieldFormElement: FormElement = {
 		extraAttributes,
 	}),
 	designerBtnElement: {
-		icon: MdTextFields,
+		icon: Bs123,
 		label: 'Number Field',
 	},
 	designerComponent: DesignerComponent,
