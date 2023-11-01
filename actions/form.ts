@@ -13,16 +13,21 @@ class UserNotFoundError extends Error {
 		this.name = 'UserNotFoundError'
 	}
 }
+async function getUser() {
+	const session = await getServerSession(authOptions)
+	return session?.user
+}
 
 export async function GetFormStats() {
-	const session = await getServerSession(authOptions)
-	if (!session?.user) {
+	const user = await getUser()
+
+	if (!user) {
 		throw new UserNotFoundError()
 	}
 
 	const stats = await prisma.form.aggregate({
 		where: {
-			user_id: session.user.id,
+			user_id: user.id,
 		},
 		_sum: {
 			visits: true,
@@ -55,8 +60,8 @@ export async function CreateForm(values: TFormSchema) {
 		throw new Error('form not valid')
 	}
 
-	const session = await getServerSession(authOptions)
-	if (!session?.user.id) {
+	const user = await getUser()
+	if (!user?.id) {
 		throw new UserNotFoundError()
 	}
 
@@ -66,7 +71,7 @@ export async function CreateForm(values: TFormSchema) {
 		data: {
 			name,
 			description,
-			user_id: session.user.id,
+			user_id: user.id,
 		},
 	})
 
@@ -74,14 +79,14 @@ export async function CreateForm(values: TFormSchema) {
 }
 
 export async function GetForms() {
-	const session = await getServerSession(authOptions)
-	if (!session?.user.id) {
+	const user = await getUser()
+	if (!user?.id) {
 		throw new UserNotFoundError()
 	}
 
 	const forms = await prisma.form.findMany({
 		where: {
-			user_id: session.user.id,
+			user_id: user.id,
 		},
 		orderBy: {
 			created_at: 'desc',
@@ -92,15 +97,15 @@ export async function GetForms() {
 }
 
 export async function GetFormById(id: number) {
-	const session = await getServerSession(authOptions)
-	if (!session?.user.id) {
+	const user = await getUser()
+	if (!user?.id) {
 		throw new UserNotFoundError()
 	}
 
 	const form = await prisma.form.findUnique({
 		where: {
 			id,
-			user_id: session.user.id,
+			user_id: user.id,
 		},
 	})
 
@@ -108,14 +113,14 @@ export async function GetFormById(id: number) {
 }
 
 export async function UpdateFormContent(id: number, jsonContent: string) {
-	const session = await getServerSession(authOptions)
-	if (!session?.user.id) {
+	const user = await getUser()
+	if (!user?.id) {
 		throw new UserNotFoundError()
 	}
 
 	const form = await prisma.form.update({
 		where: {
-			user_id: session.user.id,
+			user_id: user.id,
 			id,
 		},
 		data: {
@@ -127,8 +132,8 @@ export async function UpdateFormContent(id: number, jsonContent: string) {
 }
 
 export async function PublishForm(id: number) {
-	const session = await getServerSession(authOptions)
-	if (!session?.user.id) {
+	const user = await getUser()
+	if (!user?.id) {
 		throw new UserNotFoundError()
 	}
 
@@ -137,8 +142,60 @@ export async function PublishForm(id: number) {
 			published: true,
 		},
 		where: {
-			user_id: session.user.id,
+			user_id: user.id,
 			id,
+		},
+	})
+}
+
+export async function GetFormContentByUrl(formUrl: string) {
+	return await prisma.form.update({
+		select: {
+			content: true,
+		},
+		data: {
+			visits: {
+				increment: 1,
+			},
+		},
+		where: {
+			shareURL: formUrl,
+		},
+	})
+}
+
+export async function SubmitForm(formUrl: string, content: string) {
+	return await prisma.form.update({
+		data: {
+			submissions: {
+				increment: 1,
+			},
+			FormSubmissions: {
+				create: {
+					content,
+				},
+			},
+		},
+		where: {
+			shareURL: formUrl,
+			published: true,
+		},
+	})
+}
+
+export async function GetFormWithSubmissions(id: number) {
+	const user = await getUser()
+	if (!user?.id) {
+		throw new UserNotFoundError()
+	}
+
+	return await prisma.form.findUnique({
+		where: {
+			user_id: user.id,
+			id,
+		},
+		include: {
+			FormSubmissions: true,
 		},
 	})
 }

@@ -29,12 +29,10 @@ export default function SaveFormBtn({ id }: { id: number }) {
 	}
 	return (
 		<Button
-			variant={'outline'}
+			variant='outline'
 			className='gap-2'
 			disabled={loading}
-			onClick={() => {
-				startTransition(updateFormContent)
-			}}
+			onClick={() => startTransition(updateFormContent)}
 		>
 			<HiSaveAs className='h-4 w-4' />
 			Save

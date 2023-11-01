@@ -26,7 +26,7 @@ export default function Designer() {
 			const { active, over } = event
 			if (!active || !over) return
 
-			active.data?.current?.onDragEnd() // Clear hover effect
+			active.data?.current?.onDragEnd?.() // Clear hover effect
 
 			const isDesignerBtnElement = active.data?.current?.isDesignerBtnElement
 			const isDroppingOverDesignerDropArea = over.data?.current?.isDesignerDropArea
