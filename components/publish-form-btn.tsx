@@ -1,4 +1,4 @@
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { FaSpinner } from 'react-icons/fa'
 import { MdOutlinePublish } from 'react-icons/md'
@@ -17,14 +17,37 @@ import {
 } from './ui/alert-dialog'
 import { Button } from './ui/button'
 import { toast } from './ui/use-toast'
+import { FormElementInstance } from './form-elements'
+import { FormContentSchema } from '@/schemas/form'
 
-export default function PublishFormBtn({ id }: { id: number }) {
+export default function PublishFormBtn({
+	id,
+	elements,
+}: {
+	id: number
+	elements: FormElementInstance[]
+}) {
+	const [dialogOpen, setDialogOpen] = useState(false)
 	const [loading, startTransition] = useTransition()
 	const router = useRouter()
 
-	async function publishForm() {
+	const openConfirmDialog = () => {
+		const validation = FormContentSchema.safeParse(elements)
+		if (!validation.success) {
+			toast({
+				title: 'Error',
+				description: 'Form cannot be empty',
+				variant: 'destructive',
+			})
+			return
+		}
+		setDialogOpen(true)
+	}
+
+	const publishForm = async () => {
 		try {
-			await PublishForm(id)
+			const jsonContent = JSON.stringify(elements)
+			await PublishForm(id, jsonContent)
 			toast({
 				title: 'Success',
 				description: 'Your form is now available to the public',
@@ -39,9 +62,12 @@ export default function PublishFormBtn({ id }: { id: number }) {
 	}
 
 	return (
-		<AlertDialog>
+		<AlertDialog open={dialogOpen}>
 			<AlertDialogTrigger asChild>
-				<Button className='gap-2 text-white bg-gradient-to-r from-indigo-400 to-cyan-400'>
+				<Button
+					className='gap-2 text-white bg-gradient-to-r from-indigo-400 to-cyan-400'
+					onClick={openConfirmDialog}
+				>
 					<MdOutlinePublish className='h-4 w-4' />
 					Publish
 				</Button>
@@ -60,8 +86,9 @@ export default function PublishFormBtn({ id }: { id: number }) {
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
+					<AlertDialogCancel onClick={() => setDialogOpen(false)}>Cancel</AlertDialogCancel>
 					<AlertDialogAction
+						type='button'
 						disabled={loading}
 						onClick={(e) => {
 							e.preventDefault()

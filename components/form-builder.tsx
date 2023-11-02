@@ -5,6 +5,7 @@ import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dn
 import Link from 'next/link'
 import { ImSpinner2 } from 'react-icons/im'
 import { BsArrowLeft, BsArrowRight } from 'react-icons/bs'
+
 // import Confetti from "react-confetti";
 
 import { Form } from '@prisma/client'
@@ -17,14 +18,12 @@ import DragOverlayWrapper from './drag-overlay-wrapper'
 import SaveFormBtn from './save-form-btn'
 import PreviewDialogBtn from './preview-dialog-btn'
 import PublishFormBtn from './publish-form-btn'
-import { FaTrash } from 'react-icons/fa'
-import { DeleteForm } from '@/actions/form'
-import { useRouter } from 'next/navigation'
+import { FormDeleteBtn } from './form-delete-btn'
 
 export default function FormBuilder({ form }: { form: Form }) {
-	const { setElements, setSelectedElement } = useDesigner()
+	console.log(form)
+	const { setElements, setSelectedElement, elements } = useDesigner()
 	const [isReady, setIsReady] = useState(false)
-	const router = useRouter()
 
 	const mouseSensor = useSensor(MouseSensor, {
 		activationConstraint: {
@@ -40,23 +39,6 @@ export default function FormBuilder({ form }: { form: Form }) {
 	})
 
 	const sensors = useSensors(mouseSensor, touchSensor)
-
-	const deleteForm = async () => {
-		try {
-			await DeleteForm(form.id)
-			toast({
-				title: 'Success',
-				description: 'Form deleted successfuly',
-			})
-			router.push('/')
-		} catch (e) {
-			toast({
-				title: 'Error',
-				description: 'Can not delete form, try again',
-				variant: 'destructive',
-			})
-		}
-	}
 
 	useEffect(() => {
 		if (isReady) return
@@ -150,16 +132,14 @@ export default function FormBuilder({ form }: { form: Form }) {
 						{form.name}
 					</h2>
 					<div className='flex items-center gap-2'>
+						<FormDeleteBtn id={form.id} />
 						<PreviewDialogBtn />
 						<SaveFormBtn id={form.id} />
-						<Button
-							variant='destructive'
-							className='gap-3'
-							onClick={deleteForm}
-						>
-							Delete form <FaTrash />
-						</Button>
-						<PublishFormBtn id={form.id} />
+
+						<PublishFormBtn
+							id={form.id}
+							elements={elements}
+						/>
 					</div>
 				</nav>
 				<div className='flex w-full flex-grow items-center justify-center relative overflow-y-auto h-[200px] bg-accent bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]'>

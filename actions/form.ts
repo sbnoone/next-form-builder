@@ -132,7 +132,7 @@ export async function UpdateFormContent(id: number, jsonContent: string) {
 	return form
 }
 
-export async function PublishForm(id: number) {
+export async function PublishForm(id: number, jsonContent: string) {
 	const user = await getUser()
 	if (!user?.id) {
 		throw new UserNotFoundError()
@@ -141,6 +141,7 @@ export async function PublishForm(id: number) {
 	return await prisma.form.update({
 		data: {
 			published: true,
+			content: jsonContent,
 		},
 		where: {
 			user_id: user.id,
@@ -213,4 +214,5 @@ export async function DeleteForm(id: number) {
 			user_id: user.id,
 		},
 	})
+	revalidatePath('/')
 }

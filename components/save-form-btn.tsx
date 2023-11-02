@@ -6,10 +6,24 @@ import { UpdateFormContent } from '@/actions/form'
 import { Button } from './ui/button'
 import { useDesigner } from '../hooks/use-designer'
 import { toast } from './ui/use-toast'
+import { FormContentSchema } from '@/schemas/form'
 
 export default function SaveFormBtn({ id }: { id: number }) {
 	const { elements } = useDesigner()
 	const [loading, startTransition] = useTransition()
+
+	const handleSave = () => {
+		const validation = FormContentSchema.safeParse(elements)
+		if (!validation.success) {
+			toast({
+				title: 'Error',
+				description: 'Form cannot be empty',
+				variant: 'destructive',
+			})
+			return
+		}
+		startTransition(updateFormContent)
+	}
 
 	const updateFormContent = async () => {
 		try {
@@ -32,11 +46,11 @@ export default function SaveFormBtn({ id }: { id: number }) {
 			variant='outline'
 			className='gap-2'
 			disabled={loading}
-			onClick={() => startTransition(updateFormContent)}
+			onClick={handleSave}
 		>
-			<HiSaveAs className='h-4 w-4' />
-			Save
 			{loading && <FaSpinner className='animate-spin' />}
+			{!loading && <HiSaveAs className='h-4 w-4' />}
+			Save
 		</Button>
 	)
 }

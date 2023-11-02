@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { notFound } from 'next/navigation'
 import { LuView } from 'react-icons/lu'
 import { FaWpforms } from 'react-icons/fa'
 import { HiCursorClick } from 'react-icons/hi'
@@ -20,6 +21,7 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { FormDeleteBtn } from '@/components/form-delete-btn'
 
 export default async function FormDetailPage({
 	params,
@@ -29,9 +31,10 @@ export default async function FormDetailPage({
 	}
 }) {
 	const { id } = params
+
 	const form = await GetFormById(Number(id))
 	if (!form) {
-		throw new Error('form not found')
+		notFound()
 	}
 
 	const { visits, submissions } = form
@@ -49,7 +52,10 @@ export default async function FormDetailPage({
 			<div className='py-10 border-b border-muted'>
 				<div className='flex justify-between container'>
 					<h1 className='text-4xl font-bold truncate'>{form.name}</h1>
-					<VisitBtn shareUrl={form.shareURL} />
+					<div className='flex gap-3'>
+						<FormDeleteBtn id={form.id} />
+						<VisitBtn shareUrl={form.shareURL} />
+					</div>
 				</div>
 			</div>
 			<div className='py-4 border-b border-muted'>
