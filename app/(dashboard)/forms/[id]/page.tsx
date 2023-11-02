@@ -1,12 +1,14 @@
-import { GetFormById, GetFormWithSubmissions } from '@/actions/form'
-import FormShareLink from '@/components/form-share-link'
-import VisitBtn from '@/components/visit-btn'
 import { ReactNode } from 'react'
-import { StatsCard } from '../../page'
 import { LuView } from 'react-icons/lu'
 import { FaWpforms } from 'react-icons/fa'
 import { HiCursorClick } from 'react-icons/hi'
 import { TbArrowBounce } from 'react-icons/tb'
+import { format, formatDistance } from 'date-fns'
+
+import { GetFormById, GetFormWithSubmissions } from '@/actions/form'
+import FormShareLink from '@/components/form-share-link'
+import VisitBtn from '@/components/visit-btn'
+import { StatsCard } from '../../page'
 import { ElementsType, FormElementInstance } from '@/components/form-elements'
 import {
 	Table,
@@ -16,7 +18,6 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
-import { format, formatDistance } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 
@@ -38,10 +39,10 @@ export default async function FormDetailPage({
 	let submissionRate = 0
 
 	if (visits > 0) {
-		submissionRate = (submissions / visits) * 100
+		submissionRate = submissions / visits
 	}
 
-	const bounceRate = 100 - submissionRate
+	const bounceRate = 1 - submissionRate
 
 	return (
 		<>
@@ -61,7 +62,7 @@ export default async function FormDetailPage({
 					title='Total visits'
 					icon={<LuView className='text-blue-600' />}
 					helperText='All time form visits'
-					value={visits.toLocaleString() || ''}
+					value={visits.toLocaleString()}
 					className='shadow-md shadow-blue-600'
 				/>
 
@@ -69,7 +70,7 @@ export default async function FormDetailPage({
 					title='Total submissions'
 					icon={<FaWpforms className='text-yellow-600' />}
 					helperText='All time form submissions'
-					value={submissions.toLocaleString() || ''}
+					value={submissions.toLocaleString()}
 					className='shadow-md shadow-yellow-600'
 				/>
 
@@ -77,7 +78,7 @@ export default async function FormDetailPage({
 					title='Submission rate'
 					icon={<HiCursorClick className='text-green-600' />}
 					helperText='Visits that result in form submission'
-					value={submissionRate.toLocaleString() + '%' || ''}
+					value={submissionRate.toLocaleString(undefined, { style: 'percent' })}
 					className='shadow-md shadow-green-600'
 				/>
 
@@ -85,7 +86,7 @@ export default async function FormDetailPage({
 					title='Bounce rate'
 					icon={<TbArrowBounce className='text-red-600' />}
 					helperText='Visits that leaves without interacting'
-					value={bounceRate.toLocaleString() + '%' || ''}
+					value={bounceRate.toLocaleString(undefined, { style: 'percent' })}
 					className='shadow-md shadow-red-600'
 				/>
 			</div>
@@ -149,41 +150,46 @@ async function SubmissionsTable({ id }: { id: number }) {
 		<>
 			<h1 className='text-2xl font-bold my-4'>Submissions</h1>
 			<div className='rounded-md border'>
-				<Table>
-					<TableHeader>
-						<TableRow>
-							{columns.map((column) => (
-								<TableHead
-									key={column.id}
-									className='uppercase'
-								>
-									{column.label}
-								</TableHead>
-							))}
-							<TableHead className='text-muted-foreground text-right uppercase'>
-								Submitted at
-							</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{rows.map((row, index) => (
-							<TableRow key={index}>
+				{form.FormSubmissions.length !== 0 && (
+					<Table>
+						<TableHeader>
+							<TableRow>
 								{columns.map((column) => (
-									<RowCell
+									<TableHead
 										key={column.id}
-										type={column.type}
-										value={row[column.id]}
-									/>
+										className='uppercase'
+									>
+										{column.label}
+									</TableHead>
 								))}
-								<TableCell className='text-muted-foreground text-right'>
-									{formatDistance(row.submittedAt, new Date(), {
-										addSuffix: true,
-									})}
-								</TableCell>
+								<TableHead className='text-muted-foreground text-right uppercase'>
+									Submitted at
+								</TableHead>
 							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+						</TableHeader>
+						<TableBody>
+							{rows.map((row, index) => (
+								<TableRow key={index}>
+									{columns.map((column) => (
+										<RowCell
+											key={column.id}
+											type={column.type}
+											value={row[column.id]}
+										/>
+									))}
+									<TableCell className='text-muted-foreground text-right'>
+										{formatDistance(row.submittedAt, new Date(), {
+											addSuffix: true,
+										})}
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				)}
+				{form.FormSubmissions.length === 0 && (
+					<p className='text-center text-lg py-2'>No submissions yet</p>
+				)}
 			</div>
 		</>
 	)
@@ -196,7 +202,7 @@ function RowCell({ type, value }: { type: ElementsType; value: string }) {
 		case 'DateField':
 			if (!value) break
 			const date = new Date(value)
-			node = <Badge variant={'outline'}>{format(date, 'dd/MM/yyyy')}</Badge>
+			node = <Badge variant='outline'>{format(date, 'dd/MM/yyyy')}</Badge>
 			break
 		case 'CheckboxField':
 			const checked = value === 'true'

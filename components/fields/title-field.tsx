@@ -12,7 +12,7 @@ import { Input } from '../ui/input'
 import { useDesigner } from '@/hooks/use-designer'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 
-const type: ElementsType = 'TextField'
+const type: ElementsType = 'TitleField'
 
 const extraAttributes = {
 	title: 'Title',

@@ -17,10 +17,14 @@ import DragOverlayWrapper from './drag-overlay-wrapper'
 import SaveFormBtn from './save-form-btn'
 import PreviewDialogBtn from './preview-dialog-btn'
 import PublishFormBtn from './publish-form-btn'
+import { FaTrash } from 'react-icons/fa'
+import { DeleteForm } from '@/actions/form'
+import { useRouter } from 'next/navigation'
 
 export default function FormBuilder({ form }: { form: Form }) {
 	const { setElements, setSelectedElement } = useDesigner()
 	const [isReady, setIsReady] = useState(false)
+	const router = useRouter()
 
 	const mouseSensor = useSensor(MouseSensor, {
 		activationConstraint: {
@@ -36,6 +40,23 @@ export default function FormBuilder({ form }: { form: Form }) {
 	})
 
 	const sensors = useSensors(mouseSensor, touchSensor)
+
+	const deleteForm = async () => {
+		try {
+			await DeleteForm(form.id)
+			toast({
+				title: 'Success',
+				description: 'Form deleted successfuly',
+			})
+			router.push('/')
+		} catch (e) {
+			toast({
+				title: 'Error',
+				description: 'Can not delete form, try again',
+				variant: 'destructive',
+			})
+		}
+	}
 
 	useEffect(() => {
 		if (isReady) return
@@ -131,6 +152,13 @@ export default function FormBuilder({ form }: { form: Form }) {
 					<div className='flex items-center gap-2'>
 						<PreviewDialogBtn />
 						<SaveFormBtn id={form.id} />
+						<Button
+							variant='destructive'
+							className='gap-3'
+							onClick={deleteForm}
+						>
+							Delete form <FaTrash />
+						</Button>
 						<PublishFormBtn id={form.id} />
 					</div>
 				</nav>

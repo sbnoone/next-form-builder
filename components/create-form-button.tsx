@@ -89,6 +89,7 @@ export default function CreateFormButton() {
 									<FormLabel>Description</FormLabel>
 									<FormControl>
 										<Textarea
+											className='max-h-96'
 											rows={5}
 											{...field}
 										/>

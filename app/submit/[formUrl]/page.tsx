@@ -15,7 +15,6 @@ export default async function FormSubmitPage({
 		throw new Error('form not found')
 	}
 
-	console.log(form)
 	const formContent = JSON.parse(form.content) as FormElementInstance[]
 
 	return (

@@ -1,6 +1,12 @@
-import User from '@/components/user'
-import { ThemeModeToggle } from '@/components/theme-mode-toggle'
-import { Logo } from '@/components/logo'
+import { ReactNode, Suspense } from 'react'
+import Link from 'next/link'
+import { formatDistance } from 'date-fns'
+import { LuView } from 'react-icons/lu'
+import { FaEdit, FaWpforms, FaTrash } from 'react-icons/fa'
+import { HiCursorClick } from 'react-icons/hi'
+import { TbArrowBounce } from 'react-icons/tb'
+import { BiRightArrowAlt } from 'react-icons/bi'
+
 import {
 	Card,
 	CardHeader,
@@ -10,20 +16,13 @@ import {
 	CardFooter,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ReactNode, Suspense } from 'react'
-import { LuView } from 'react-icons/lu'
-import { FaEdit, FaWpforms } from 'react-icons/fa'
-import { HiCursorClick } from 'react-icons/hi'
-import { TbArrowBounce } from 'react-icons/tb'
 import { GetFormStats, GetForms } from '@/actions/form'
 import CreateFormButton from '@/components/create-form-button'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
-import { formatDistance } from 'date-fns'
-import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Form } from '@prisma/client'
-import { BiRightArrowAlt } from 'react-icons/bi'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export default async function Home() {
 	return (
@@ -82,7 +81,7 @@ export function StatsCards({ data, loading }: StatsCardsProps) {
 				title='Submission rate'
 				icon={<HiCursorClick className='text-green-600' />}
 				helperText='Visits that result in form submission'
-				value={data?.submissionRate.toLocaleString() || ''}
+				value={data?.submissionRate.toLocaleString(undefined, { style: 'percent' }) || ''}
 				loading={loading}
 				className='shadow-md shadow-green-600'
 			/>
@@ -90,7 +89,7 @@ export function StatsCards({ data, loading }: StatsCardsProps) {
 				title='Bounce rate'
 				icon={<TbArrowBounce className='text-red-600' />}
 				helperText='Visits that leaves without interacting'
-				value={data?.bounceRate.toLocaleString() || ''}
+				value={data?.bounceRate.toLocaleString(undefined, { style: 'percent' }) || ''}
 				loading={loading}
 				className='shadow-md shadow-red-600'
 			/>
@@ -140,6 +139,7 @@ function FormCardSkeleton() {
 
 async function FormCards() {
 	const forms = await GetForms()
+	const deleteForm = () => {}
 	return (
 		<>
 			{forms.map((form) => (
@@ -158,8 +158,15 @@ function FormCard({ form }: { form: Form }) {
 			<CardHeader>
 				<CardTitle className='flex items-center gap-2 justify-between'>
 					<span className='truncate font-bold'>{form.name}</span>
-					{form.published && <Badge>Published</Badge>}
-					{!form.published && <Badge variant={'destructive'}>Draft</Badge>}
+					{form.published && <Badge className='hover:bg-primary'>Published</Badge>}
+					{!form.published && (
+						<Badge
+							className='hover:bg-destructive'
+							variant='destructive'
+						>
+							Draft
+						</Badge>
+					)}
 				</CardTitle>
 				<CardDescription className='flex items-center justify-between text-muted-foreground text-sm'>
 					{formatDistance(form.created_at, new Date(), {
@@ -167,9 +174,24 @@ function FormCard({ form }: { form: Form }) {
 					})}
 					{form.published && (
 						<span className='flex items-center gap-2'>
-							<LuView className='text-muted-foreground' />
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<LuView className='text-muted-foreground' />
+									</TooltipTrigger>
+									<TooltipContent side='bottom'>Total visits</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 							<span>{form.visits.toLocaleString()}</span>
-							<FaWpforms className='text-muted-foreground' />
+
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<FaWpforms className='text-muted-foreground' />
+									</TooltipTrigger>
+									<TooltipContent side='bottom'>Total submissions</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 							<span>{form.submissions.toLocaleString()}</span>
 						</span>
 					)}
@@ -193,7 +215,7 @@ function FormCard({ form }: { form: Form }) {
 					<Button
 						asChild
 						variant='secondary'
-						className='w-full mt-2 text-md gap-4'
+						className='w-full mt-2 text-md gap-3'
 					>
 						<Link href={`/builder/${form.id}`}>
 							Edit form <FaEdit />

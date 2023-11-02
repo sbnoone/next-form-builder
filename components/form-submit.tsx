@@ -1,11 +1,12 @@
 'use client'
 
 import { useCallback, useRef, useState, useTransition } from 'react'
-import { FormElementInstance, FormElements } from './form-elements'
-import { Button } from './ui/button'
 import { HiCursorClick } from 'react-icons/hi'
-import { toast } from './ui/use-toast'
 import { ImSpinner2 } from 'react-icons/im'
+
+import { Button } from './ui/button'
+import { FormElementInstance, FormElements } from './form-elements'
+import { toast } from './ui/use-toast'
 import { SubmitForm } from '@/actions/form'
 
 export default function FormSubmitComponent({
@@ -15,7 +16,6 @@ export default function FormSubmitComponent({
 	content: FormElementInstance[]
 	formUrl: string
 }) {
-	console.log(content)
 	const formValues = useRef<{ [key: string]: string }>({})
 	const formErrors = useRef<{ [key: string]: boolean }>({})
 	const [renderKey, setRenderKey] = useState(new Date().getTime())
@@ -103,9 +103,7 @@ export default function FormSubmitComponent({
 				})}
 				<Button
 					className='mt-8'
-					onClick={() => {
-						startTransition(submitForm)
-					}}
+					onClick={() => startTransition(submitForm)}
 					disabled={pending}
 				>
 					{!pending && (

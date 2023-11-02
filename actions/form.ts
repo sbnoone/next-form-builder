@@ -1,6 +1,7 @@
 'use server'
 
 import { getServerSession } from 'next-auth'
+import { revalidatePath } from 'next/cache'
 
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
@@ -41,10 +42,10 @@ export async function GetFormStats() {
 	let submissionRate = 0
 
 	if (visits > 0) {
-		submissionRate = (submissions / visits) * 100
+		submissionRate = submissions / visits
 	}
 
-	const bounceRate = 100 - submissionRate
+	const bounceRate = 1 - submissionRate
 
 	return {
 		visits,
@@ -127,7 +128,7 @@ export async function UpdateFormContent(id: number, jsonContent: string) {
 			content: jsonContent,
 		},
 	})
-
+	revalidatePath('/')
 	return form
 }
 
@@ -196,6 +197,20 @@ export async function GetFormWithSubmissions(id: number) {
 		},
 		include: {
 			FormSubmissions: true,
+		},
+	})
+}
+
+export async function DeleteForm(id: number) {
+	const user = await getUser()
+	if (!user?.id) {
+		throw new UserNotFoundError()
+	}
+
+	await prisma.form.delete({
+		where: {
+			id,
+			user_id: user.id,
 		},
 	})
 }

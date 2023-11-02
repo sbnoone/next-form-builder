@@ -14,8 +14,6 @@ import {
 export default function User() {
 	const { data } = useSession()
 
-	console.log(data?.user)
-
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
