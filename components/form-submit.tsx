@@ -18,7 +18,7 @@ export default function FormSubmitComponent({
 }) {
 	const formValues = useRef<{ [key: string]: string }>({})
 	const formErrors = useRef<{ [key: string]: boolean }>({})
-	const [renderKey, setRenderKey] = useState(new Date().getTime())
+	const [, rerender] = useState<number>()
 
 	const [submitted, setSubmitted] = useState(false)
 	const [pending, startTransition] = useTransition()
@@ -48,7 +48,7 @@ export default function FormSubmitComponent({
 		formErrors.current = {}
 		const validForm = validateForm()
 		if (!validForm) {
-			setRenderKey(new Date().getTime())
+			rerender(Date.now())
 			toast({
 				title: 'Error',
 				description: 'please check the form for errors',
@@ -85,10 +85,7 @@ export default function FormSubmitComponent({
 
 	return (
 		<div className='flex justify-center w-full h-full items-center p-8'>
-			<div
-				key={renderKey}
-				className='max-w-[620px] flex flex-col gap-4 flex-grow bg-background w-full p-8 overflow-y-auto border shadow-xl shadow-blue-700 rounded'
-			>
+			<div className='max-w-[620px] flex flex-col gap-4 flex-grow bg-background w-full p-8 overflow-y-auto border shadow-xl shadow-blue-700 rounded'>
 				{content.map((element) => {
 					const FormElement = FormElements[element.type].formComponent
 					return (

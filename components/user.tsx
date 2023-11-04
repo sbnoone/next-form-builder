@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import { AvatarIcon } from '@radix-ui/react-icons'
 
@@ -13,6 +14,7 @@ import {
 
 export default function User() {
 	const { data } = useSession()
+	const path = usePathname()
 
 	return (
 		<DropdownMenu>
@@ -25,7 +27,7 @@ export default function User() {
 				</Avatar>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuItem onClick={() => signOut()}>Sign out</DropdownMenuItem>
+				<DropdownMenuItem onClick={() => signOut({ callbackUrl: path })}>Sign out</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)

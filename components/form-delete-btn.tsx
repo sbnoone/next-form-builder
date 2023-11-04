@@ -56,6 +56,9 @@ export function FormDeleteBtn({ id }: { id: number }) {
 					</DialogDescription>
 				</DialogHeader>
 				<div className='flex gap-3'>
+					<DialogClose asChild>
+						<Button className='flex-1'>Cancel</Button>
+					</DialogClose>
 					<Button
 						className='flex-1 gap-x-3'
 						variant='destructive'
@@ -64,9 +67,6 @@ export function FormDeleteBtn({ id }: { id: number }) {
 						Proceed
 						{pending && <FaSpinner className='animate-spin' />}
 					</Button>
-					<DialogClose asChild>
-						<Button className='flex-1'>Cancel</Button>
-					</DialogClose>
 				</div>
 			</DialogContent>
 		</Dialog>
