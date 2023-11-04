@@ -1,14 +1,15 @@
 'use client'
 
 import { signIn } from 'next-auth/react'
-import { Button } from '@/components/ui/button'
-import GoogleSvg from '@/public/google.svg'
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { ImSpinner2 } from 'react-icons/im'
+
+import { Button } from '@/components/ui/button'
+import GoogleSvg from '@/public/google.svg'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
 	Form,
 	FormControl,
@@ -17,6 +18,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form'
+import { toast } from '@/components/ui/use-toast'
 
 interface SignInProps {
 	searchParams: { callbackUrl?: string }
@@ -38,8 +40,19 @@ export default function SignIn({ searchParams: { callbackUrl = '/' } }: SignInPr
 		resolver: zodResolver(SigninFormSchema),
 	})
 
-	const onSubmit: SubmitHandler<TSigninFromSchema> = (values) => {
-		console.log(values)
+	const onSubmit: SubmitHandler<TSigninFromSchema> = async (values) => {
+		try {
+			await signIn('credentials', {
+				...values,
+				callbackUrl,
+			})
+		} catch (e) {
+			toast({
+				title: 'Sign in error',
+				description: 'Please try again',
+				variant: 'destructive',
+			})
+		}
 	}
 
 	return (
@@ -89,9 +102,11 @@ export default function SignIn({ searchParams: { callbackUrl = '/' } }: SignInPr
 							/>
 							<Button
 								type='submit'
-								className='mt-4 w-full text-center h-12'
+								className='mt-4 w-full text-center h-12 gap-x-2'
+								disabled={form.formState.isSubmitting}
 							>
 								Sign in
+								{form.formState.isSubmitting && <ImSpinner2 className='animate-spin' />}
 							</Button>
 						</form>
 					</Form>
