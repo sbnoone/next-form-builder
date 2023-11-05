@@ -5,6 +5,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { ImSpinner2 } from 'react-icons/im'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import GoogleSvg from '@/public/google.svg'
@@ -26,12 +28,13 @@ interface SignInProps {
 
 const SigninFormSchema = z.object({
 	email: z.string().email(),
-	password: z.string().min(6),
+	password: z.string().min(6, 'Password must contain at least 6 characters'),
 })
 
 type TSigninFromSchema = z.infer<typeof SigninFormSchema>
 
 export default function SignIn({ searchParams: { callbackUrl = '/' } }: SignInProps) {
+	const router = useRouter()
 	const form = useForm<TSigninFromSchema>({
 		values: {
 			email: '',
@@ -42,14 +45,25 @@ export default function SignIn({ searchParams: { callbackUrl = '/' } }: SignInPr
 
 	const onSubmit: SubmitHandler<TSigninFromSchema> = async (values) => {
 		try {
-			await signIn('credentials', {
+			const response = await signIn('credentials', {
 				...values,
 				callbackUrl,
+				redirect: false,
 			})
+
+			if (!response || response.error) {
+				toast({
+					title: 'Sign in error',
+					description: 'Please try again',
+					variant: 'destructive',
+				})
+				return
+			}
+			router.push(response.url || callbackUrl)
 		} catch (e) {
 			toast({
-				title: 'Sign in error',
-				description: 'Please try again',
+				title: 'Error',
+				description: 'Something went wrong, try again',
 				variant: 'destructive',
 			})
 		}
@@ -110,6 +124,15 @@ export default function SignIn({ searchParams: { callbackUrl = '/' } }: SignInPr
 							</Button>
 						</form>
 					</Form>
+					<div className='pt-4 text-center'>
+						Don't have an account?{' '}
+						<Link
+							className='underline'
+							href='/signup'
+						>
+							Sign up
+						</Link>
+					</div>
 					<div className='flex items-center pt-4 before:border-b before:flex-1 before:w-full  after:border-b after:flex-1  after:w-full after:block'>
 						<span className='flex-[0.2_0_auto] text-center uppercase'>OR</span>
 					</div>
