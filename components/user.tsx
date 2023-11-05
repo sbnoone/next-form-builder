@@ -15,7 +15,7 @@ import {
 export default function User() {
 	const { data } = useSession()
 	const path = usePathname()
-	console.log(data?.user)
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>

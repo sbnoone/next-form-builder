@@ -9,6 +9,7 @@ import { prisma } from '@/lib/prisma'
 export const authOptions: NextAuthOptions = {
 	adapter: PrismaAdapter(prisma),
 	session: { strategy: 'jwt' },
+	pages: { signIn: '/signin' },
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -20,9 +21,6 @@ export const authOptions: NextAuthOptions = {
 				password: { label: 'Password', type: 'password' },
 			},
 			async authorize(credentials) {
-				console.log('AUTHORIZE')
-				console.log(credentials)
-
 				if (!credentials?.email || !credentials?.password) {
 					return null
 				}
@@ -40,7 +38,6 @@ export const authOptions: NextAuthOptions = {
 				const isValid = await bcrypt.compare(credentials.password, user.password)
 
 				if (!isValid) {
-					console.log('NOT VALID')
 					return null
 				}
 
@@ -57,7 +54,6 @@ export const authOptions: NextAuthOptions = {
 			return session
 		},
 	},
-	pages: { signIn: '/signin' },
 }
 
 const handler = NextAuth(authOptions)
