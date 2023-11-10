@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt'
 
 export async function POST(req: NextRequest) {
 	const data: { email: string; password: string } = await req.json()
-	console.log('req data', data)
 
 	if (!data.email || !data.password) {
 		return new NextResponse('Bad credentials', { status: 400 })

@@ -16,8 +16,8 @@ export default function FormElementsSidebar() {
 				<SidebarBtnElement formElement={FormElements.TextAreaField} />
 				<SidebarBtnElement formElement={FormElements.DateField} />
 				<SidebarBtnElement formElement={FormElements.CheckboxField} />
+				<SidebarBtnElement formElement={FormElements.RadioGroupField} />
 				<SidebarBtnElement formElement={FormElements.SelectField} />
-
 				<p className='text-sm text-muted-foreground col-span-1 md:col-span-2 my-2 place-self-start'>
 					Layout elements
 				</p>

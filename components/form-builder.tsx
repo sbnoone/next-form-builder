@@ -21,7 +21,6 @@ import PublishFormBtn from './publish-form-btn'
 import { FormDeleteBtn } from './form-delete-btn'
 
 export default function FormBuilder({ form }: { form: Form }) {
-	console.log(form)
 	const { setElements, setSelectedElement, elements } = useDesigner()
 	const [isReady, setIsReady] = useState(false)
 
@@ -142,7 +141,7 @@ export default function FormBuilder({ form }: { form: Form }) {
 						/>
 					</div>
 				</nav>
-				<div className='flex w-full flex-grow items-center justify-center relative overflow-y-auto h-[200px] bg-accent bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]'>
+				<div className='flex w-full flex-grow items-center justify-center relative overflow-y-hidden h-[200px] bg-accent bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]'>
 					<Designer />
 				</div>
 			</main>
