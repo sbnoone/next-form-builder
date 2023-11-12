@@ -218,13 +218,16 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
 							onClick={(e) => {
 								e.stopPropagation() // avoid selection of element while deleting
 								removeElement(element.id)
+								setSelectedElement(null)
 							}}
 						>
 							<BiSolidTrash className='h-6 w-6' />
 						</Button>
 					</div>
 					<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse'>
-						<p className='text-muted-foreground text-sm'>Click for properties or drag to move</p>
+						<p className='text-center text-muted-foreground text-sm'>
+							Click to update field properties or drag to move
+						</p>
 					</div>
 				</>
 			)}

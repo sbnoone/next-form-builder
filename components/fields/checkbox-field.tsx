@@ -27,7 +27,7 @@ const type: ElementsType = 'CheckboxField'
 
 const extraAttributes = {
 	label: 'Checkbox field',
-	helperText: 'Check',
+	helperText: 'Checkbox helper text',
 	required: false,
 }
 
@@ -121,13 +121,13 @@ function FormComponent({
 			<div className='grid gap-1.5 leading-none'>
 				<Label
 					htmlFor={id}
-					className={cn(error && 'text-red-500')}
+					className={cn(error && 'text-destructive')}
 				>
 					{label}
 					{required && '*'}
 				</Label>
 				{helperText && (
-					<p className={cn('text-muted-foreground text-[0.8rem]', error && 'text-red-500')}>
+					<p className={cn('text-muted-foreground text-[0.8rem]', error && 'text-destructive')}>
 						{helperText}
 					</p>
 				)}
@@ -229,21 +229,14 @@ function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementIns
 					control={form.control}
 					name='required'
 					render={({ field }) => (
-						<FormItem className='flex items-center justify-between rounded-lg border p-3 shadow-sm'>
-							<div className='space-y-0.5'>
-								<FormLabel>Required</FormLabel>
-								<FormDescription>
-									The helper text of the field. <br />
-									It will be displayed below the field.
-								</FormDescription>
-							</div>
+						<FormItem className='flex items-center justify-between rounded-lg border p-3 shadow-sm space-y-0'>
+							<FormLabel>Required</FormLabel>
 							<FormControl>
 								<Switch
 									checked={field.value}
 									onCheckedChange={field.onChange}
 								/>
 							</FormControl>
-							<FormMessage />
 						</FormItem>
 					)}
 				/>

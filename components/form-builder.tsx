@@ -44,7 +44,7 @@ export default function FormBuilder({ form }: { form: Form }) {
 		const elements = JSON.parse(form.content)
 		setElements(elements)
 		setSelectedElement(null)
-		const readyTimeout = setTimeout(() => setIsReady(true), 500)
+		const readyTimeout = setTimeout(() => setIsReady(true), 100)
 		return () => clearTimeout(readyTimeout)
 	}, [form, setElements, isReady, setSelectedElement])
 

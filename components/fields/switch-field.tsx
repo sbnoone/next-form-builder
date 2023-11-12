@@ -1,15 +1,17 @@
 'use client'
 
-import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { MdTextFields } from 'react-icons/md'
+import { z } from 'zod'
+import { IoMdSwitch } from 'react-icons/io'
 
 import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from '../form-elements'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
 import { useDesigner } from '@/hooks/use-designer'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
+import { cn } from '@/lib/utils'
+import { Switch } from '../ui/switch'
 import {
 	Form,
 	FormControl,
@@ -19,19 +21,16 @@ import {
 	FormLabel,
 	FormMessage,
 } from '../ui/form'
-import { Switch } from '../ui/switch'
-import { cn } from '@/lib/utils'
 
-const type: ElementsType = 'TextField'
+const type: ElementsType = 'SwitchField'
 
 const extraAttributes = {
-	label: 'Text field',
-	helperText: 'Helper text',
+	label: 'Switch field',
+	helperText: 'Switch field helper text',
 	required: false,
-	placeholder: 'Value here...',
 }
 
-export const TextFieldFormElement: FormElement = {
+export const SwitchFieldFormElement: FormElement = {
 	type,
 	construct: (id: string) => ({
 		id,
@@ -39,8 +38,8 @@ export const TextFieldFormElement: FormElement = {
 		extraAttributes,
 	}),
 	designerBtnElement: {
-		icon: MdTextFields,
-		label: 'Text Field',
+		icon: IoMdSwitch,
+		label: 'Switch Field',
 	},
 	designerComponent: DesignerComponent,
 	formComponent: FormComponent,
@@ -62,18 +61,15 @@ type CustomInstance = FormElementInstance & {
 
 function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
 	const element = elementInstance as CustomInstance
-	const { label, required, placeholder, helperText } = element.extraAttributes
+	const { label, required, helperText } = element.extraAttributes
+	const id = `switch-${element.id}`
 	return (
-		<div className='flex flex-col gap-2 w-full'>
-			<Label>
+		<div className='flex flex-col space-y-2'>
+			<Label htmlFor={id}>
 				{label}
 				{required && '*'}
 			</Label>
-			<Input
-				readOnly
-				disabled
-				placeholder={placeholder}
-			/>
+			<Switch id={id} />
 			{helperText && <p className='text-muted-foreground text-[0.8rem]'>{helperText}</p>}
 		</div>
 	)
@@ -92,35 +88,42 @@ function FormComponent({
 }) {
 	const element = elementInstance as CustomInstance
 
-	const [value, setValue] = useState(defaultValue || '')
+	const [value, setValue] = useState<boolean>(defaultValue === 'true')
 	const [error, setError] = useState(false)
 
 	useEffect(() => {
 		setError(isInvalid === true)
 	}, [isInvalid])
 
-	const { label, required, placeholder, helperText } = element.extraAttributes
+	const { label, required, helperText } = element.extraAttributes
+	const id = `switch-${element.id}`
 	return (
-		<div className='flex flex-col gap-2 w-full'>
-			<Label className={cn(error && 'text-red-500')}>
+		<div className='flex flex-col space-y-2'>
+			<Label
+				htmlFor={id}
+				className={cn(error && 'text-destructive')}
+			>
 				{label}
 				{required && '*'}
 			</Label>
-			<Input
+			<Switch
+				id={id}
+				value={value ? 'on' : 'off'}
 				className={cn(error && 'border-red-500')}
-				placeholder={placeholder}
-				onChange={(e) => setValue(e.target.value)}
-				onBlur={(e) => {
+				onCheckedChange={(checked) => {
+					let value = false
+					if (checked === true) value = true
+
+					setValue(value)
 					if (!submitValue) return
-					const valid = TextFieldFormElement.validate(element, e.target.value)
+					const stringValue = value ? 'true' : 'false'
+					const valid = SwitchFieldFormElement.validate(element, stringValue)
 					setError(!valid)
-					if (!valid) return
-					submitValue(element.id, e.target.value)
+					submitValue(element.id, stringValue)
 				}}
-				value={value}
 			/>
 			{helperText && (
-				<p className={cn('text-muted-foreground text-[0.8rem]', error && 'text-red-500')}>
+				<p className={cn('text-muted-foreground text-[0.8rem]', error && 'text-destructive')}>
 					{helperText}
 				</p>
 			)}
@@ -132,7 +135,6 @@ const FieldOptionsSchema = z.object({
 	label: z.string().min(2).max(50),
 	helperText: z.string().max(200),
 	required: z.boolean().default(false),
-	placeholder: z.string().max(50),
 })
 
 type TFieldOptions = z.infer<typeof FieldOptionsSchema>
@@ -147,7 +149,6 @@ function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementIns
 			label: element.extraAttributes.label,
 			helperText: element.extraAttributes.helperText,
 			required: element.extraAttributes.required,
-			placeholder: element.extraAttributes.placeholder,
 		},
 	})
 
@@ -156,13 +157,12 @@ function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementIns
 	}, [element, form])
 
 	const onSubmit: SubmitHandler<TFieldOptions> = (values) => {
-		const { label, helperText, placeholder, required } = values
+		const { label, helperText, required } = values
 		updateElement(element.id, {
 			...element,
 			extraAttributes: {
 				label,
 				helperText,
-				placeholder,
 				required,
 			},
 		})
@@ -172,7 +172,9 @@ function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementIns
 		<Form {...form}>
 			<form
 				onBlur={form.handleSubmit(onSubmit)}
-				onSubmit={(e) => e.preventDefault()}
+				onSubmit={(e) => {
+					e.preventDefault()
+				}}
 				className='space-y-3'
 			>
 				<FormField
@@ -198,25 +200,6 @@ function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementIns
 				/>
 				<FormField
 					control={form.control}
-					name='placeholder'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Placeholder</FormLabel>
-							<FormControl>
-								<Input
-									{...field}
-									onKeyDown={(e) => {
-										if (e.key === 'Enter') e.currentTarget.blur()
-									}}
-								/>
-							</FormControl>
-							<FormDescription>The placeholder of the field</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
 					name='helperText'
 					render={({ field }) => (
 						<FormItem>
@@ -231,7 +214,7 @@ function FieldOptionsForm({ elementInstance }: { elementInstance: FormElementIns
 							</FormControl>
 							<FormDescription>
 								The helper text of the field. <br />
-								It will be displayed below the field
+								It will be displayed below the field.
 							</FormDescription>
 							<FormMessage />
 						</FormItem>

@@ -7,6 +7,7 @@ import { SelectFieldFormElement } from './fields/select-field'
 import { SeparatorFieldFormElement } from './fields/separator-field'
 import { SpacerFieldFormElement } from './fields/spacer-field'
 import { SubtitleFieldFormElement } from './fields/subtitle-field'
+import { SwitchFieldFormElement } from './fields/switch-field'
 import { TextFieldFormElement } from './fields/text-field'
 import { TextareaFieldFormElement } from './fields/textarea-field'
 import { TitleFieldFormElement } from './fields/title-field'
@@ -24,6 +25,7 @@ export type ElementsType =
 	| 'SelectField'
 	| 'CheckboxField'
 	| 'RadioGroupField'
+	| 'SwitchField'
 
 export type SubmitFunction = (key: string, value: string) => void
 
@@ -75,4 +77,5 @@ export const FormElements: FormElementsType = {
 	SelectField: SelectFieldFormElement,
 	CheckboxField: CheckboxFieldFormElement,
 	RadioGroupField: RadioGroupFieldFormElement,
+	SwitchField: SwitchFieldFormElement,
 }
