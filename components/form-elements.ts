@@ -1,5 +1,6 @@
 import { CheckboxFieldFormElement } from './fields/checkbox-field'
 import { DateFieldFormElement } from './fields/date-field'
+import { FileFieldFormElement } from './fields/file-field'
 import { NumberFieldFormElement } from './fields/number-field'
 import { ParagraphFieldFormElement } from './fields/paragraph-field'
 import { RadioGroupFieldFormElement } from './fields/radio-group-field'
@@ -26,8 +27,9 @@ export type ElementsType =
 	| 'CheckboxField'
 	| 'RadioGroupField'
 	| 'SwitchField'
+	| 'FileField'
 
-export type SubmitFunction = (key: string, value: string) => void
+export type SubmitFunction = (key: string, value: string | File) => void
 
 export type FormElement = {
 	type: ElementsType
@@ -52,7 +54,7 @@ export type FormElement = {
 		elementInstance: FormElementInstance
 	}>
 
-	validate: (formElement: FormElementInstance, currentValue: string) => boolean
+	validate: (formElement: FormElementInstance, currentValue: any) => boolean
 }
 
 export type FormElementInstance = {
@@ -78,4 +80,5 @@ export const FormElements: FormElementsType = {
 	CheckboxField: CheckboxFieldFormElement,
 	RadioGroupField: RadioGroupFieldFormElement,
 	SwitchField: SwitchFieldFormElement,
+	FileField: FileFieldFormElement,
 }

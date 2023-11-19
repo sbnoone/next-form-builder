@@ -5,7 +5,7 @@ import { HiCursorClick } from 'react-icons/hi'
 import { ImSpinner2 } from 'react-icons/im'
 
 import { Button } from './ui/button'
-import { FormElementInstance, FormElements } from './form-elements'
+import { FormElementInstance, FormElements, SubmitFunction } from './form-elements'
 import { toast } from './ui/use-toast'
 import { SubmitForm } from '@/actions/form'
 
@@ -16,7 +16,7 @@ export default function FormSubmitComponent({
 	content: FormElementInstance[]
 	formUrl: string
 }) {
-	const formValues = useRef<{ [key: string]: string }>({})
+	const formValues = useRef<{ [key: string]: any }>({})
 	const formErrors = useRef<{ [key: string]: boolean }>({})
 	const [, rerender] = useState<number>()
 
@@ -40,7 +40,7 @@ export default function FormSubmitComponent({
 		return true
 	}, [content])
 
-	const submitValue = useCallback((key: string, value: string) => {
+	const submitValue: SubmitFunction = useCallback((key, value) => {
 		formValues.current[key] = value
 	}, [])
 
