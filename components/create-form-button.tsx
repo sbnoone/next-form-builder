@@ -2,9 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BsFileEarmarkPlus } from 'react-icons/bs'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { ImSpinner2 } from 'react-icons/im'
+
 import { FormSchema, type TFormSchema } from '@/schemas/form'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
@@ -24,6 +25,7 @@ import {
 
 export default function CreateFormButton() {
 	const router = useRouter()
+	const searchParams = useSearchParams()
 	const form = useForm<TFormSchema>({
 		resolver: zodResolver(FormSchema),
 	})
@@ -45,10 +47,22 @@ export default function CreateFormButton() {
 		}
 	}
 
+	const isCreateFormModalOpen = searchParams.get('modal') === 'createForm'
+
 	return (
-		<Dialog>
+		<Dialog
+			defaultOpen={isCreateFormModalOpen}
+			onOpenChange={(open) => {
+				if (!open) {
+					router.replace('/')
+				}
+			}}
+		>
 			<DialogTrigger asChild>
 				<Button
+					onClick={() => {
+						router.replace(`?${new URLSearchParams({ modal: 'createForm' }).toString()}`)
+					}}
 					variant='outline'
 					className='group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4'
 				>

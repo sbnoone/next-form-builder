@@ -2,7 +2,7 @@ import { ReactNode, Suspense } from 'react'
 import Link from 'next/link'
 import { formatDistance } from 'date-fns'
 import { LuView } from 'react-icons/lu'
-import { FaEdit, FaWpforms, FaTrash } from 'react-icons/fa'
+import { FaEdit, FaWpforms } from 'react-icons/fa'
 import { HiCursorClick } from 'react-icons/hi'
 import { TbArrowBounce } from 'react-icons/tb'
 import { BiRightArrowAlt } from 'react-icons/bi'
@@ -33,7 +33,9 @@ export default async function Home() {
 			<Separator className='my-6' />
 			<h1 className='font-bold text-4xl'>Your forms</h1>
 			<div className='grid gric-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
-				<CreateFormButton />
+				<Suspense fallback={null}>
+					<CreateFormButton />
+				</Suspense>
 				<Suspense
 					fallback={[1, 2, 3, 4].map((el) => (
 						<FormCardSkeleton key={el} />
@@ -67,7 +69,6 @@ export function StatsCards({ data, loading }: StatsCardsProps) {
 				loading={loading}
 				className='shadow-md shadow-blue-600'
 			/>
-
 			<StatsCard
 				title='Total submissions'
 				icon={<FaWpforms className='text-yellow-600' />}
@@ -76,7 +77,6 @@ export function StatsCards({ data, loading }: StatsCardsProps) {
 				loading={loading}
 				className='shadow-md shadow-yellow-600'
 			/>
-
 			<StatsCard
 				title='Submission rate'
 				icon={<HiCursorClick className='text-green-600' />}
